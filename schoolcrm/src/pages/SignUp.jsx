@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
-
     const [passcode, setPasscode] = useState("0000");
     const [inputPassCode, setInputPassCode] = useState("");
     const [message, setMessage] = useState("");
@@ -11,11 +10,11 @@ const SignUp = () => {
 
     const handleCheckPasscode = () => {
         if (inputPassCode.trim() === "") {
-            setMessage("Passcode is required")
+            setMessage("Passcode is required.");
         } else if (inputPassCode === passcode) {
-            navigate("/admin");
+            navigate("/admin-sign-up");
         } else {
-            setMessage('Incorrect Password. Please try again.');
+            setMessage("Incorrect Password. Please try again.");
         }
     };
 
@@ -27,8 +26,9 @@ const SignUp = () => {
                     type="password"
                     value={inputPassCode}
                     onChange={(e) => setInputPassCode(e.target.value)}
-                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required
+                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter passcode"
+                    required
                 />
                 <button
                     onClick={handleCheckPasscode}

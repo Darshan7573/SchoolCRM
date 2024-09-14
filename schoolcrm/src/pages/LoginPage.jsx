@@ -10,7 +10,7 @@ const LoginPage = () => {
                         Access the administrative tools and manage the system.
                     </p>
                     <Link
-                        to="/admin-login"
+                        to="/admin"
                         className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
                     >
                         Login as Admin
