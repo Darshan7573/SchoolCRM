@@ -12,6 +12,8 @@ function Home() {
                 <p>Manage your school efficiently with our all-in-one School CRM platform. Access student records, teacher data, class schedules, and more in a streamlined interface.
                 </p>
                 <Link to='/login' className="bg-blue-600 w-24 mt-6  text-white px-6 py-2 rounded-md text-lg hover:bg-blue-700 transition duration-300">Login</Link>
+                <Link to='/sign-up' className='bg-red-600 w-24 mt-6 text-white px-6 py-2 rounded-md text-lg hover:bg-red-700 transition duration-300'>SignUp</Link>
+                <p>(Only for admins)</p>
             </div>
         </div >
     )
