@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const ManageClasses = () => {
     const classes = [
         {
@@ -16,8 +18,9 @@ const ManageClasses = () => {
 
     return (
         <div>
-            {/* Add Class Button */}
-            <button className="bg-blue-500 text-white py-2 px-4 rounded mb-6">Add Class</button>
+            <Link to='/add-classes'>
+                <button className="bg-blue-500 text-white py-2 px-4 rounded mb-6">Add Classes</button>
+            </Link>
 
             {/* Classes Table */}
             <table className="min-w-full bg-white">

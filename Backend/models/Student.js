@@ -7,7 +7,7 @@ const studentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    usernam: {
+    username: {
         type: String,
         required: true,
         unique: true,
@@ -23,10 +23,12 @@ const studentSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+
     classAssigned: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Class'
     },
+
     feesPaid: {
         type: Number,
         required: true
@@ -42,7 +44,7 @@ const studentSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-studentSchema.pre('save', async (next) => {
+studentSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next()
     this.password = await bcrypt.hash(this.password, 10)
     next()

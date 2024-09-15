@@ -27,6 +27,7 @@ const teacherSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,  // Reference to Class model
         ref: 'Class',
     },
+
     salary: {
         type: Number,
         required: true,
