@@ -2,14 +2,21 @@ import { useState } from "react";
 import ManageClasses from "../components/ManageClasses"
 import ManageStudents from "../components/ManageStudents"
 import ManageTeachers from "../components/ManageTeachers"
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
     const [activeSection, setActiveSection] = useState("manageTeachers");
 
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        navigate('/')
+    }
+
     return (
         <div className="flex h-screen">
             <aside className="w-1/4 bg-gray-800 text-white p-6">
-                <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
+                <h2 onClick={handleClick} className="text-2xl font-bold mb-6">Admin Dashboard</h2>
                 <nav>
                     <ul>
                         <li className="mb-4">

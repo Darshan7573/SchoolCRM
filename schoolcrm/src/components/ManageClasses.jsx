@@ -1,20 +1,27 @@
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const ManageClasses = () => {
-    const classes = [
-        {
-            id: 1,
-            className: "10th Grade",
-            teacher: "John Doe",
-            students: ["Alice Johnson", "Bob Smith"],
-        },
-        {
-            id: 2,
-            className: "9th Grade",
-            teacher: "Jane Smith",
-            students: ["Charlie Brown", "Eve Adams"],
-        },
-    ];
+    const [classes, setClasses] = useState([]);
+
+    const fetchClasses = async () => {
+        try {
+            const res = await axios.get('http://localhost:3000/api/classes/classes');
+            console.log('API Response:', res.data); // Check the response
+            if (Array.isArray(res.data)) {
+                setClasses(res.data);
+            } else {
+                console.error('Unexpected response format:', res.data);
+            }
+        } catch (error) {
+            console.error('Error fetching Classes:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchClasses();
+    }, []);
 
     return (
         <div>
@@ -27,19 +34,25 @@ const ManageClasses = () => {
                 <thead className="bg-gray-800 text-white">
                     <tr>
                         <th className="py-3 px-4 text-left">Class Name</th>
-                        <th className="py-3 px-4 text-left">Assigned Teacher</th>
-                        <th className="py-3 px-4 text-left">Students</th>
+                        <th className="py-3 px-4 text-left">Year</th>
+                        <th className="py-3 px-4 text-left">Student Count</th>
+                        <th className="py-3 px-4 text-left">Schedule</th>
                         <th className="py-3 px-4 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {classes.map((classItem) => (
-                        <tr key={classItem.id} className="border-b">
-                            <td className="py-3 px-4">{classItem.className}</td>
-                            <td className="py-3 px-4">{classItem.teacher}</td>
+                        <tr key={classItem._id} className="border-b">
+                            <td className="py-3 px-4">{classItem.classname}</td>
+                            <td className="py-3 px-4">{classItem.year}</td>
+                            <td className="py-3 px-4">{classItem.students.length}</td>
                             <td className="py-3 px-4">
-                                {classItem.students.map((student, index) => (
-                                    <div key={index}>{student}</div>
+                                {classItem.schedule.map((scheduleItem, index) => (
+                                    <div key={index}>
+                                        <div>{scheduleItem.subject}</div>
+                                        <div>{scheduleItem.dayOfWeek}</div>
+                                        <div>{scheduleItem.startTime} - {scheduleItem.endTime}</div>
+                                    </div>
                                 ))}
                             </td>
                             <td className="py-3 px-4">

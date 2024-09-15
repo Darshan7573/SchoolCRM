@@ -1,10 +1,29 @@
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const ManageStudents = () => {
-    const students = [
-        { id: 1, name: "Alice Johnson", contact: "alice@example.com", class: "10th Grade", fees: "$2000" },
-        { id: 2, name: "Bob Smith", contact: "bob@example.com", class: "9th Grade", fees: "$1800" },
-    ];
+
+    const [students, setStudents] = useState([])
+
+    // const students = [
+    //     { id: 1, name: "Alice Johnson", contact: "alice@example.com", class: "10th Grade", fees: "$2000" },
+    //     { id: 2, name: "Bob Smith", contact: "bob@example.com", class: "9th Grade", fees: "$1800" },
+    // ];
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/api/students/students')
+                setStudents(res.data)
+            } catch (error) {
+                console.log('Error fetching Students:', error)
+            }
+        }
+
+        fetchStudents()
+    }, [])
 
     return (
         <div>
@@ -21,16 +40,18 @@ const ManageStudents = () => {
                         <th className="py-3 px-4 text-left">Contact</th>
                         <th className="py-3 px-4 text-left">Class</th>
                         <th className="py-3 px-4 text-left">Fees</th>
+                        <th className='py-3 px-4 text-left'>DOB</th>
                         <th className="py-3 px-4 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {students.map((student) => (
                         <tr key={student.id} className="border-b">
-                            <td className="py-3 px-4">{student.name}</td>
+                            <td className="py-3 px-4">{student.fullname}</td>
                             <td className="py-3 px-4">{student.contact}</td>
-                            <td className="py-3 px-4">{student.class}</td>
-                            <td className="py-3 px-4">{student.fees}</td>
+                            <td className="py-3 px-4">{student.classAssigned}</td>
+                            <td className="py-3 px-4">{student.feesPaid}</td>
+                            <td className='py-3 px-4'>{new Date(student.dob).toLocaleDateString()}</td>
                             <td className="py-3 px-4">
                                 <button className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</button>
                                 <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>

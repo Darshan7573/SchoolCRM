@@ -21,9 +21,11 @@ const AddStudent = () => {
         setError(""); // Clear any previous errors
         setSuccess(false); // Reset success state
 
+        const normalizedUsername = username.toLowerCase()
+
         const newStudent = {
             fullname,
-            username,
+            username: normalizedUsername,
             password,
             contact,
             classAssigned,

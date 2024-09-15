@@ -20,18 +20,18 @@ const studentSchema = new mongoose.Schema({
     contact: {
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
 
     classAssigned: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Class'
+        type: String,
+        required: true
     },
 
     feesPaid: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
     gender: {
         type: String,

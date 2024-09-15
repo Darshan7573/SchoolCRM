@@ -7,7 +7,7 @@ const router = express.Router()
 const JWT_SECRET = process.env.JWT_SECRET
 
 router.post('/add-teachers', async (req, res) => {
-    const { fullname, username, password, contact, salary, classAssigned } = req.body
+    const { fullname, username, password, contact, salary } = req.body
 
     try {
         const existingTeacher = await Teacher.findOne({ username })
@@ -21,7 +21,7 @@ router.post('/add-teachers', async (req, res) => {
             password,
             contact,
             salary,
-            classAssigned
+            // classAssigned
         })
 
         await newTeacher.save();
@@ -39,6 +39,16 @@ router.post('/add-teachers', async (req, res) => {
             token
         })
 
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+
+router.get('/teachers', async (req, res) => {
+    try {
+        const teachers = await Teacher.find()
+        res.status(200).json(teachers)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
