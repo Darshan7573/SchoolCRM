@@ -1,74 +1,70 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from 'react-router-dom'
 
 const TeacherClasses = () => {
-    const { teacherId } = useParams()  // Extract teacherId from the route
+
+    const { teacherId } = useParams()
+
     const [classes, setClasses] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log(teacherId)
-        if (teacherId) {
+        const fetchClasses = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/api/classes/teacher/classes/${teacherId}`); //66e8742f4934a5f146edefd0 Replace with actual teacher ID or dynamic value
+                setClasses(response.data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            fetchClasses();
-        }
-        else {
-            console.log('NO TEACHER')
-        }
-    }, [teacherId]);
+        fetchClasses();
+    }, []); // Dependency array is empty to run only on component mount
 
-    const fetchClasses = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await axios.get(`http://localhost:3000/api/classes/teacher/classes/${teacherId}`);
-            console.log('Classes', response.data)
-            setClasses(response.data);
-        } catch (err) {
-            console.log(err)
-            setError('Unable to fetch classes for this teacher.', err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    if (loading) return <div className="p-4 text-center">Loading...</div>;
+    if (error) return <div className="p-4 text-center text-red-500">Error: {error}</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10 px-4">
-            <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-                <h1 className="text-2xl font-bold text-gray-700 mb-4">Classes</h1>
-
-                {loading && <p className="text-blue-500">Loading classes...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-
-                <div>
-                    {classes.length > 0 ? (
-                        classes.map((classItem) => (
-                            <div key={classItem._id} className="bg-gray-50 p-4 mb-4 rounded-lg shadow">
-                                <h2 className="text-lg font-semibold text-gray-800">
-                                    {classItem.classname} - {classItem.year}
-                                </h2>
-                                <p className="text-sm text-gray-600">
-                                    <span className="font-semibold">Teacher:</span> {classItem.teacherAssigned.name}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    <span className="font-semibold">Student Limit:</span> {classItem.studentLimit}
-                                </p>
-                                <p className="text-sm font-semibold text-gray-600 mt-2">Schedule:</p>
-                                {classItem.schedule.map((schedule, index) => (
-                                    <div key={index} className="text-sm text-gray-600">
-                                        <p>{schedule.subject} - {schedule.dayOfWeek}, {schedule.startTime} to {schedule.endTime}</p>
-                                    </div>
-                                ))}
+        <div className="p-6 max-w-4xl mx-auto">
+            <h1 className="text-3xl font-bold mb-6 text-center">Classes for Teacher</h1>
+            {classes.length === 0 ? (
+                <p className="text-center text-gray-500">No classes found for this teacher.</p>
+            ) : (
+                <ul className="space-y-6">
+                    {classes.map((cls) => (
+                        <li key={cls._id} className="p-6 border border-gray-200 rounded-lg shadow-lg bg-white">
+                            <h2 className="text-2xl font-semibold mb-2">{cls.classname} - Year {cls.year}</h2>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-semibold mb-1">Schedule:</h3>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    {cls.schedule.map((sched) => (
+                                        <li key={sched._id} className="text-gray-700">
+                                            {sched.subject} on {sched.dayOfWeek} from {sched.startTime} to {sched.endTime}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                        ))
-                    ) : (
-                        !loading && <p className="text-gray-600">No classes found for this teacher.</p>
-                    )}
-                </div>
-            </div>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-semibold mb-1">Students:</h3>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    {cls.students.map(student => (
+                                        <li key={student._id} className="text-gray-700">
+                                            {student.fullname} (Username: {student.username})
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                                Student Limit: {cls.studentLimit}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

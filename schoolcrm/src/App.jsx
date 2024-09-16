@@ -29,9 +29,9 @@ function App() {
         <Route path="/add-classes" element={<AddClass />} />
         <Route path="/student-login" element={<StudentLogin />} />
         <Route path="/student-classes/:studentId" element={<StudnetClasses />} />
-        <Route path="/teacher-classes/:teacherId" element={<TeacherClasses />} />
+        <Route path='teacher/classes/:teacherId' element={<TeacherClasses />} />
         <Route path="/teacher-login" element={<TeacherLogin />} />
-        <Route path="/edit-teacher/:teacherId" element={<AddTeacher />} />
+        <Route path="/edit-teacher/:studentId" element={<AddTeacher />} />
         <Route path="/edit-student/:studentId" element={<AddStudenst />} />
         <Route path="/edit-classes/:classesId" element={<AddClass />} />
       </Routes>

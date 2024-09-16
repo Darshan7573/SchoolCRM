@@ -15,10 +15,11 @@ const TeacherLogin = () => {
         setError('')
         try {
             const res = await axios.post('http://localhost:3000/api/teachers/login', formData)
+            console.log(res.data, "response")
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token)
                 toast.success('Login Successful')
-                navigate(`/teacher-classes/${res.data.teacherId}`)
+                navigate(`/teacher/classes/${res.data.studentId}`)
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Error during login")
