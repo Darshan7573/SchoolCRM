@@ -111,7 +111,7 @@ const AddClass = () => {
 
         try {
             if (isEditMode) {
-                await axios.patch(`http://localhost:3000/api/classes/classes-update`, {
+                await axios.patch(`http://localhost:3000/api/classes/classes-update/${classesId}`, {
                     classesId: classesId,
                     updateData: classData
                 })

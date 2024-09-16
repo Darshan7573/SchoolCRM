@@ -90,26 +90,30 @@ router.get('/classes/:classId', async (req, res) => {
     }
 })
 
-router.patch('/classes-update', async (req, res) => {
-    const { classesId, updatedData } = req.body
+router.patch('/classes-update/:classId', async (req, res) => {
+    const { classId } = req.params
+    const { updateData } = req.body
     try {
-        const updateClasses = await Class.findByIdAndUpdate(
-            classesId,
-            { $set: updatedData },
+        const updatedClasses = await Class.findByIdAndUpdate(
+            classId,
+            { $set: updateData },
             { new: true, runValidators: true }
         )
-        if (!updateClasses) {
+        if (!updatedClasses) {
             res.status(404).json({ message: "Class not found" })
         }
 
         res.status(200).json({
             message: "Successfully Updated",
-            updateClasses
+            updatedClasses
         })
     } catch (error) {
-        res.status(404).json({ error: error })
+        console.log('Error Updating the Clas:', error)
+        res.status(404).json({ error: error.message })
     }
 })
+
+
 
 router.patch('/classes-update-schedule', async (req, res) => {
     const { classesId, newSchedule } = req.body;
