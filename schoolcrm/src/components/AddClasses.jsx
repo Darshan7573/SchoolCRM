@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddClass = () => {
     const [name, setName] = useState("");
@@ -12,8 +13,11 @@ const AddClass = () => {
     const [teachers, setTeachers] = useState([]);
     const [students, setStudents] = useState([]);
     const [year, setYear] = useState("")
+    const [isEditMode, setIsEditMode] = useState(false)
+    const [classId, setClassId] = useState("")
 
     const navigate = useNavigate();
+    const { classesId } = useParams()
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -34,9 +38,30 @@ const AddClass = () => {
             }
         };
 
+        const fetchClassData = async () => {
+            if (classesId) {
+                try {
+                    const res = await axios.get(`http://localhost:3000/api/classes/classes/${classesId}`)
+                    // console.log(res.data)
+                    const classData = res.data
+                    setName(classData.classname)
+                    setYear(classData.year)
+                    setTeacherId(classData.teacherAssigned)
+                    setSchedule(classData.schedule)
+                    setStudentIds(classData.students)
+                    setClassId(classData._id)
+                    setIsEditMode(true)
+                } catch (error) {
+                    console.error(error)
+                    toast.error("Failed to fetch class data")
+                }
+            }
+        }
+
         fetchTeachers();
         fetchStudents();
-    }, []);
+        fetchClassData()
+    }, [classesId]);
 
     const handleStudentChange = (e) => {
         const { options } = e.target;
@@ -76,7 +101,7 @@ const AddClass = () => {
             return
         }
 
-        const newClass = {
+        const classData = {
             classname: name,
             year,
             teacherAssigned: teacherId,
@@ -85,9 +110,20 @@ const AddClass = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:3000/api/classes/add-class", newClass);
-            setSuccess(true);
-            console.log("Class Added:", response.data);
+            if (isEditMode) {
+                await axios.patch(`http://localhost:3000/api/classes/classes-update`, {
+                    classesId: classesId,
+                    updateData: classData
+                })
+                setSuccess(true)
+                toast.success('Class Updated')
+            }
+            else {
+                await axios.post("http://localhost:3000/api/classes/add-class", classData);
+                setSuccess(true);
+                toast.success("Class Added");
+
+            }
 
             // Clear form after successful submission
             setName("");
@@ -104,9 +140,9 @@ const AddClass = () => {
 
     return (
         <div className="max-w-md mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Add New Class</h2>
+            <h2 className="text-2xl font-bold mb-4">{isEditMode ? "Edit Class" : "Add New Class"}</h2>
 
-            {success && <div className="mb-4 text-green-500">Class added successfully!</div>}
+            {success && <div className="mb-4 text-green-500">Class {isEditMode ? "updated" : "added"}successfully!</div>}
             {error && <div className="mb-4 text-red-500">{error}</div>}
 
             <form onSubmit={handleSubmit}>
@@ -219,6 +255,8 @@ const AddClass = () => {
                                 />
                             </div>
 
+
+
                             {schedule.length > 1 && (
                                 <button
                                     type="button"
@@ -240,8 +278,9 @@ const AddClass = () => {
                     </button>
                 </div>
 
+
                 <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                    Add Class
+                    {isEditMode ? "Update Class" : 'Add Class'}
                 </button>
             </form>
         </div>

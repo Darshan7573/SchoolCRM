@@ -31,14 +31,12 @@ router.post('/add-class', async (req, res) => {
             return res.status(400).json({ message: "Some student ID's are invalid" });
         }
 
-        // Validate schedule (if provided)
         if (schedule && Array.isArray(schedule) && schedule.length > 0) {
             for (const entry of schedule) {
                 if (!entry.subject || !entry.dayOfWeek || !entry.startTime || !entry.endTime) {
                     return res.status(400).json({ message: "Each schedule entry must have subject, dayOfWeek, startTime, and endTime" });
                 }
 
-                // Optionally, you can validate that the dayOfWeek is valid
                 const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                 if (!validDays.includes(entry.dayOfWeek)) {
                     return res.status(400).json({ message: `Invalid dayOfWeek: ${entry.dayOfWeek}` });
@@ -66,6 +64,8 @@ router.post('/add-class', async (req, res) => {
     }
 });
 
+
+
 router.get('/classes', async (req, res) => {
     try {
         const classes = await Class.find()
@@ -76,5 +76,110 @@ router.get('/classes', async (req, res) => {
         })
     }
 })
+
+router.get('/classes/:classId', async (req, res) => {
+    const { classId } = req.params
+    try {
+        const classData = await Class.findById(classId)
+        if (!classData) {
+            return res.status(404).json({ message: "Class not found" })
+        }
+        res.status(200).json(classData)
+    } catch (error) {
+        res.status(404).json({ error: error.message })
+    }
+})
+
+router.patch('/classes-update', async (req, res) => {
+    const { classesId, updatedData } = req.body
+    try {
+        const updateClasses = await Class.findByIdAndUpdate(
+            classesId,
+            { $set: updatedData },
+            { new: true, runValidators: true }
+        )
+        if (!updateClasses) {
+            res.status(404).json({ message: "Class not found" })
+        }
+
+        res.status(200).json({
+            message: "Successfully Updated",
+            updateClasses
+        })
+    } catch (error) {
+        res.status(404).json({ error: error })
+    }
+})
+
+router.patch('/classes-update-schedule', async (req, res) => {
+    const { classesId, newSchedule } = req.body;
+
+    try {
+        const updatedClass = await Class.findByIdAndUpdate(
+            classesId,
+            { $set: { schedule: newSchedule } },  // Replace the schedule array
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedClass) {
+            return res.status(404).json({ message: "Class not found" });
+        }
+
+        res.status(200).json({
+            message: "Schedule successfully updated",
+            updatedClass
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+router.patch('/classes-update-schedule-item', async (req, res) => {
+    const { classesId, scheduleIndex, updatedScheduleItem } = req.body;
+
+    try {
+        const classData = await Class.findById(classesId);
+
+        if (!classData) {
+            return res.status(404).json({ message: "Class not found" });
+        }
+
+        // Check if the schedule index is valid
+        if (scheduleIndex < 0 || scheduleIndex >= classData.schedule.length) {
+            return res.status(400).json({ message: "Invalid schedule index" });
+        }
+
+        // Update the specific schedule entry
+        classData.schedule[scheduleIndex] = { ...classData.schedule[scheduleIndex], ...updatedScheduleItem };
+
+        // Save the updated class
+        await classData.save();
+
+        res.status(200).json({
+            message: "Schedule item successfully updated",
+            classData
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.delete('/classes/:id', async (req, res) => {
+    try {
+        const classId = req.params.id;
+        const result = await Class.findByIdAndDelete(classId);
+
+        if (!result) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        res.status(200).json({ message: 'Class deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting class:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 export default router;

@@ -25,6 +25,7 @@ function App() {
         <Route path="/add-classes" element={<AddClass />} />
         <Route path="/edit-teacher/:teacherId" element={<AddTeacher />} />
         <Route path="/edit-student/:studentId" element={<AddStudenst />} />
+        <Route path="/edit-classes/:classesId" element={<AddClass />} />
       </Routes>
       <ToastContainer />
     </div>

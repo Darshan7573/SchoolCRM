@@ -31,6 +31,8 @@ const ManageStudents = () => {
         if (window.confirm("Are you sure to delete this Student?")) {
             try {
                 await axios.delete(`http://localhost:3000/api/students/delete-student/${studentId}`)
+                setStudents(students.filter(student => student._id !== studentId));
+                toast.success("Student deleted successfully");
             } catch (error) {
                 setError(error)
                 toast.error("Error Deleting Student")

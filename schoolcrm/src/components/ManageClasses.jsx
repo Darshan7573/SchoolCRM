@@ -1,9 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ManageClasses = () => {
     const [classes, setClasses] = useState([]);
+
+
+    const handleDelete = async (classId) => {
+        if (window.confirm("Are you sure you want to delete this class?")) {
+            try {
+                await axios.delete(`http://localhost:3000/api/classes/classes/${classId}`);
+                setClasses(classes.filter(classItem => classItem._id !== classId));
+                fetchClasses()
+                toast.success("Class deleted successfully");
+            } catch (error) {
+                toast.error("Error deleting class");
+            }
+        }
+    };
+
 
     const fetchClasses = async () => {
         try {
@@ -45,6 +61,9 @@ const ManageClasses = () => {
                         <tr key={classItem._id} className="border-b">
                             <td className="py-3 px-4">{classItem.classname}</td>
                             <td className="py-3 px-4">{classItem.year}</td>
+                            {/* <td className="py-3 px-4">
+                                {classItem.students && Array.isArray(classItem.students) ? classItem.students.length : 'N/A'}
+                            </td> */}
                             <td className="py-3 px-4">{classItem.students.length}</td>
                             <td className="py-3 px-4">
                                 {classItem.schedule.map((scheduleItem, index) => (
@@ -56,8 +75,8 @@ const ManageClasses = () => {
                                 ))}
                             </td>
                             <td className="py-3 px-4">
-                                <button className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</button>
-                                <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
+                                <Link to={`/edit-classes/${classItem._id}`} className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</Link>
+                                <button onClick={() => handleDelete(classItem._id)} className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
                             </td>
                         </tr>
                     ))}
