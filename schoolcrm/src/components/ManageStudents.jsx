@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 const ManageStudents = () => {
 
     const [students, setStudents] = useState([])
-    const [error, setError] = useState("")
+    // const [error, setError] = useState("")
 
     // const students = [
     //     { id: 1, name: "Alice Johnson", contact: "alice@example.com", class: "10th Grade", fees: "$2000" },
@@ -26,6 +26,17 @@ const ManageStudents = () => {
 
         fetchStudents()
     }, [])
+
+    const handleDelete = async (studentId) => {
+        if (window.confirm("Are you sure to delete this Student?")) {
+            try {
+                await axios.delete(`http://localhost:3000/api/students/delete-student/${studentId}`)
+            } catch (error) {
+                setError(error)
+                toast.error("Error Deleting Student")
+            }
+        }
+    }
 
 
     return (
@@ -57,7 +68,7 @@ const ManageStudents = () => {
                             <td className='py-3 px-4'>{new Date(student.dob).toLocaleDateString()}</td>
                             <td className="py-3 px-4">
                                 <Link to={`/edit-student/${student._id}`} className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</Link>
-                                <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
+                                <button onClick={() => handleDelete(student._id)} className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
                             </td>
                         </tr>
                     ))}
