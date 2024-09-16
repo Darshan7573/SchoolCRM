@@ -9,6 +9,10 @@ import AddTeacher from "./components/AddTeacher"
 import AddStudenst from "./components/AddStudents"
 import AddClass from "./components/AddClasses"
 import { ToastContainer } from "react-toastify"
+import StudentLogin from "./components/StudentLogin"
+import TeacherLogin from "./components/TeacherLogin"
+import StudnetClasses from "./pages/StudnetClasses"
+import TeacherClasses from "./pages/TeacherClasses"
 
 function App() {
   return (
@@ -23,6 +27,10 @@ function App() {
         <Route path="/add-teacher" element={<AddTeacher />} />
         <Route path="/add-students" element={<AddStudenst />} />
         <Route path="/add-classes" element={<AddClass />} />
+        <Route path="/student-login" element={<StudentLogin />} />
+        <Route path="/student-classes/:studentId" element={<StudnetClasses />} />
+        <Route path="/teacher-classes/:teacherId" element={<TeacherClasses />} />
+        <Route path="/teacher-login" element={<TeacherLogin />} />
         <Route path="/edit-teacher/:teacherId" element={<AddTeacher />} />
         <Route path="/edit-student/:studentId" element={<AddStudenst />} />
         <Route path="/edit-classes/:classesId" element={<AddClass />} />

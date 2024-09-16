@@ -1,46 +1,46 @@
 import { useState } from "react";
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const TeacherLogin = () => {
+
+    const navigate = useNavigate()
+
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError('')
+        try {
+            const res = await axios.post('http://localhost:3000/api/teachers/login', formData)
+            if (res.data.token) {
+                localStorage.setItem('token', res.data.token)
+                toast.success('Login Successful')
+                navigate(`/teacher-classes/${res.data.teacherId}`)
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Error during login")
+        }
+    }
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        try {
-            const res = await axios.post('http://localhost:3000/api/admin/login', formData);
-            if (res.data.token) {
-                localStorage.setItem('token', res.data.token);
-                toast.success('Login successful');
-                navigate('/admin-dashboard');
-            }
-        } catch (err) {
-            console.log(err);
-            toast.error(err.response?.data?.message || 'Error during login');
-            setError(err.response?.data?.message || 'Error during login');
-        }
-    };
-
     return (
         <div className="min-h-screen flex justify-center items-center bg-gray-100">
             <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
-                <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
+                <h1 className="text-2xl font-bold mb-6 text-center">Teacher Login</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <label className="block text-sm font-medium text-gray-700">User Name</label>
                         <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
+                            type="text"
+                            name="username"
+                            value={formData.username}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-lg"
                             required
@@ -62,10 +62,9 @@ const AdminLogin = () => {
                         Login
                     </button>
                 </form>
-                <ToastContainer />
             </div>
         </div>
     );
-};
+}
 
-export default AdminLogin;
+export default TeacherLogin

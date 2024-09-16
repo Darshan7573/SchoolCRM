@@ -1,6 +1,7 @@
 import express from 'express'
 import Student from '../models/Student.js'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 
 const router = express.Router()
 
@@ -121,5 +122,31 @@ router.delete('/delete-student/:studentId', async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 })
+
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body
+    try {
+        const student = await Student.findOne({ username })
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" })
+        }
+        const isMatch = await bcrypt.compare(password, student.password)
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' })
+        }
+
+        const token = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+        res.status(200).json({
+            message: 'Login Successfull',
+            token,
+            studentId: student._id
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+
 
 export default router

@@ -9,7 +9,7 @@ const AddTeacher = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [contact, setContact] = useState("");
-    // const [classAssigned, setClassAssigned] = useState("");
+    const [classAssigned, setClassAssigned] = useState("");
     const [salary, setSalary] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
@@ -50,7 +50,7 @@ const AddTeacher = () => {
             username,
             password,
             contact,
-            // classAssigned,
+            ...(isEditMode ? {} : { classAssigned }),
             salary,
         };
 
@@ -73,7 +73,7 @@ const AddTeacher = () => {
             setUsername("");
             setPassword("");
             setContact("");
-            // setClassAssigned("");
+            setClassAssigned("");
             setSalary("");
 
             // Redirect to the ManageTeachers page after success
@@ -118,8 +118,7 @@ const AddTeacher = () => {
                         required
                     />
                 </div>
-
-                <div className="mb-4">
+                {isEditMode ? "" : <div className="mb-4">
                     <label className="block text-gray-700">Password</label>
                     <input
                         type="password"
@@ -129,7 +128,8 @@ const AddTeacher = () => {
                         placeholder="Password"
                         required
                     />
-                </div>
+                </div>}
+
 
                 <div className="mb-4">
                     <label className="block text-gray-700">Contact Info</label>
@@ -142,8 +142,7 @@ const AddTeacher = () => {
                         required
                     />
                 </div>
-
-                {/* <div className="mb-4">
+                {isEditMode ? "" : <div className="mb-4">
                     <label className="block text-gray-700">Class Assigned</label>
                     <input
                         type="text"
@@ -153,7 +152,8 @@ const AddTeacher = () => {
                         placeholder="Class Assigned"
                         required
                     />
-                </div> */}
+                </div>}
+
 
                 <div className="mb-4">
                     <label className="block text-gray-700">Salary</label>

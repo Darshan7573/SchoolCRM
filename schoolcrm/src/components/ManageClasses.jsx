@@ -15,7 +15,7 @@ const ManageClasses = () => {
                 fetchClasses()
                 toast.success("Class deleted successfully");
             } catch (error) {
-                toast.error("Error deleting class");
+                toast.error("Error deleting class", error);
             }
         }
     };

@@ -64,6 +64,68 @@ router.post('/add-class', async (req, res) => {
     }
 });
 
+router.get('/student/classes/:studentId', async (req, res) => {
+    try {
+        const { studentId } = req.params;
+
+        if (!studentId) {
+            return res.status(400).json({ message: "Student ID is required" });
+        }
+
+        const classes = await Class.find({ students: studentId }).populate('teacherAssigned');
+
+        if (classes.length === 0) {
+            return res.status(404).json({ message: 'No classes found for this student' });
+        }
+
+        res.status(200).json(classes);
+    } catch (error) {
+        console.error('Error fetching classes:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// router.get('/teacher/classes/:teacherId', async (req, res) => {
+//     try {
+//         const { teacherId } = req.params;
+
+//         if (!teacherId) {
+//             return res.status(400).json({ message: "teacher ID is required" });
+//         }
+
+//         const classes = await Teacher.find({ teacher: teacherId }).populate('TeacherAssigned');
+
+//         if (classes.length === 0) {
+//             return res.status(404).json({ message: 'No classes found for this Teacher' });
+//         }
+
+//         res.status(200).json(classes);
+//     } catch (error) {
+//         console.error('Error fetching classes:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// });
+
+router.get('/teacher/classes/:teacherId', async (req, res) => {
+    try {
+        const { teacherId } = req.params;
+
+        // Find all classes where the teacher is assigned
+        const classDetails = await Class.find({ teacherAssigned: teacherId })
+            .populate('teacherAssigned') // Populate teacher details
+            .populate('students');       // Populate student details
+
+        if (classDetails.length === 0) {
+            return res.status(404).json({ message: 'No classes found for this teacher' });
+        }
+
+        res.status(200).json(classDetails);
+    } catch (error) {
+        console.error('Error fetching class details:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 
 router.get('/classes', async (req, res) => {
@@ -76,6 +138,7 @@ router.get('/classes', async (req, res) => {
         })
     }
 })
+
 
 router.get('/classes/:classId', async (req, res) => {
     const { classId } = req.params
@@ -112,8 +175,6 @@ router.patch('/classes-update/:classId', async (req, res) => {
         res.status(404).json({ error: error.message })
     }
 })
-
-
 
 router.patch('/classes-update-schedule', async (req, res) => {
     const { classesId, newSchedule } = req.body;
