@@ -54,4 +54,29 @@ router.get('/teachers', async (req, res) => {
     }
 })
 
+router.post('/teachers-update', async (req, res) => {
+
+    const { teacherId, updateData } = req.body
+    console.log(req.body)
+
+    try {
+        const updateTeachers = await Teacher.findByIdAndUpdate(
+            { _id: teacherId },
+            { $set: updateData },
+            { new: true, runValidators: true }
+        )
+
+        if (!updateTeachers) {
+            res.status(404).json({ message: "Teacher not found" })
+        }
+
+        res.status(200).json({
+            message: "Teacher updated successfully",
+            updateTeachers
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
 export default router
