@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify'
 
 const AddStudent = () => {
     const [fullname, setFullname] = useState("");
@@ -13,8 +14,34 @@ const AddStudent = () => {
     const [gender, setGender] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false)
 
     const navigate = useNavigate();
+    const { studentId } = useParams()
+
+    useEffect(() => {
+        if (studentId) {
+            setIsEditMode(true)
+            const fetchStudent = async () => {
+                try {
+                    const res = await axios.get(`http://localhost:3000/api/students/student/${studentId}`)
+                    const student = res.data
+                    setFullname(student.fullname)
+                    setUsername(student.username)
+                    setPassword("")
+                    setContact(student.contact)
+                    setDob(student.dob)
+                    setGender(student.gender)
+                    setFeesPaid(student.feesPaid)
+                    setClassAssigned(student.classAssigned)
+                } catch (error) {
+                    setError("Error fetching student data", error)
+                    toast.error('Error fetching student data')
+                }
+            }
+            fetchStudent()
+        }
+    }, [studentId])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,11 +62,18 @@ const AddStudent = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:3000/api/students/add-student", newStudent);
-
-            // Handle success
-            setSuccess(true);
-            console.log("Student Added:", response.data);
+            if (isEditMode) {
+                await axios.patch('http://localhost:3000/api/students/student-update', {
+                    studentId,
+                    updatedData: newStudent
+                })
+                setSuccess(true)
+                toast.success("Student Updated Successfully")
+            } else {
+                await axios.post("http://localhost:3000/api/students/add-student", newStudent);
+                setSuccess(true)
+                toast.success('Added Successfully')
+            }
 
             // Clear the form after submission
             setFullname("");
@@ -61,10 +95,10 @@ const AddStudent = () => {
 
     return (
         <div className="max-w-md mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Add New Student</h2>
+            <h2 className="text-2xl font-bold mb-4">{isEditMode ? 'Edit Student' : 'Add New Student'}</h2>
 
             {/* Display success message */}
-            {success && <div className="mb-4 text-green-500">Student added successfully!</div>}
+            {success && <div className="mb-4 text-green-500">{isEditMode ? 'Student Updated Successfully' : 'Student added successfully!'}</div>}
 
             {/* Display error message */}
             {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -106,6 +140,7 @@ const AddStudent = () => {
                     />
                 </div>
 
+
                 <div className="mb-4">
                     <label className="block text-gray-700">Contact Info</label>
                     <input
@@ -142,7 +177,7 @@ const AddStudent = () => {
                     />
                 </div>
 
-                <div className="mb-4">
+                {isEditMode ? "" : <div className="mb-4">
                     <label className="block text-gray-700">Date of Birth</label>
                     <input
                         type="date"
@@ -151,7 +186,8 @@ const AddStudent = () => {
                         className="w-full px-3 py-2 border rounded-lg"
                         required
                     />
-                </div>
+                </div>}
+
 
                 <div className="mb-4">
                     <label className="block text-gray-700">Gender</label>
@@ -172,7 +208,7 @@ const AddStudent = () => {
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                 >
-                    Add Student
+                    {isEditMode ? 'Update Student' : 'Add Student'}
                 </button>
             </form>
         </div>

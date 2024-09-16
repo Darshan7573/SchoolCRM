@@ -69,4 +69,39 @@ router.get('/students', async (req, res) => {
     }
 })
 
+router.get('/student/:studentId', async (req, res) => {
+    const { studentId } = req.params
+
+    try {
+        const student = await Student.findById(studentId)
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" })
+        }
+        res.status(200).json(student)
+    } catch (error) {
+        res.status(404).json({ error: error.message })
+    }
+})
+
+router.patch('/student-update', async (req, res) => {
+    const { studentId, updatedData } = req.body
+    try {
+        const updateStudents = await Student.findByIdAndUpdate(
+            { _id: studentId },
+            { $set: updatedData },
+            { new: true, runValidators: true }
+        )
+        if (!updateStudents) {
+            res.status(404).json({ message: "Student not found" })
+        }
+
+        res.status(200).json({
+            message: "Successfully Updated",
+            updateStudents
+        })
+    } catch (error) {
+        res.status(404).json({ error: error })
+    }
+})
+
 export default router

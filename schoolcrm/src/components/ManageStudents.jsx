@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const ManageStudents = () => {
 
     const [students, setStudents] = useState([])
+    const [error, setError] = useState("")
 
     // const students = [
     //     { id: 1, name: "Alice Johnson", contact: "alice@example.com", class: "10th Grade", fees: "$2000" },
@@ -24,6 +26,7 @@ const ManageStudents = () => {
 
         fetchStudents()
     }, [])
+
 
     return (
         <div>
@@ -53,7 +56,7 @@ const ManageStudents = () => {
                             <td className="py-3 px-4">{student.feesPaid}</td>
                             <td className='py-3 px-4'>{new Date(student.dob).toLocaleDateString()}</td>
                             <td className="py-3 px-4">
-                                <button className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</button>
+                                <Link to={`/edit-student/${student._id}`} className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</Link>
                                 <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
                             </td>
                         </tr>
