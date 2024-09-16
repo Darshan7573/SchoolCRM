@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const ManageTeachers = () => {
 
     const [teachers, setTeachers] = useState([])
+    const [error, setError] = useState("")
 
     // const teachers = [
     //     { id: 1, name: "John Doe", contact: "john@example.com", class: "10th Grade", salary: "$5000" },
@@ -25,6 +27,19 @@ const ManageTeachers = () => {
 
         fetchTeachers()
     }, [])
+
+    const handleDelete = async (teacherId) => {
+        if (window.confirm("Are you sure you want to delete this teacher?")) {
+            try {
+                await axios.delete(`http://localhost:3000/api/teachers/delete-teacher/${teacherId}`)
+                setTeachers(teachers.filter(teacher => teacher._id !== teacherId))
+                toast.success("Teacher deleted successfully")
+            } catch (error) {
+                setError(error)
+                toast.error("Error deleting teacher")
+            }
+        }
+    }
 
     return (
         <>
@@ -52,7 +67,7 @@ const ManageTeachers = () => {
                                 <td className="py-3 px-4">{teacher.salary}</td>
                                 <td className="py-3 px-4">
                                     <Link to={`/edit-teacher/${teacher._id}`} className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</Link>
-                                    <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
+                                    <button onClick={() => handleDelete(teacher._id)} className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
                                 </td>
                             </tr>
                         ))}
