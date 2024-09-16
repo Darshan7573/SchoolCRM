@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { FaUserShield } from 'react-icons/fa';
 
 const AdminLogin = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -33,6 +34,7 @@ const AdminLogin = () => {
     return (
         <div className="min-h-screen flex justify-center items-center bg-gray-100">
             <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
+                <FaUserShield className="text-4xl text-blue-600 mb-4 mx-auto" />
                 <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
@@ -64,6 +66,12 @@ const AdminLogin = () => {
                 </form>
                 <ToastContainer />
             </div>
+            <button
+                onClick={() => navigate(-1)}
+                className="absolute top-4 left-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300"
+            >
+                Go Back
+            </button>
         </div>
     );
 };
