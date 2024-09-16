@@ -23,6 +23,7 @@ const TeacherLogin = () => {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Error during login")
+            setError(error.response?.data?.message || 'Error during login');
         }
     }
 

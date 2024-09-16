@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
     try {
         const teacher = await Teacher.findOne({ username })
         if (!teacher) {
-            return res.status(404).json({ message: "Student not found" })
+            return res.status(404).json({ message: "Teacher not found" })
         }
         const isMatch = await bcrypt.compare(password, teacher.password)
         if (!isMatch) {
