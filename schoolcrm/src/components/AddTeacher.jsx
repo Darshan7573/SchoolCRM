@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddTeacher = () => {
     const [name, setName] = useState("");
@@ -11,8 +13,32 @@ const AddTeacher = () => {
     const [salary, setSalary] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false)
 
     const navigate = useNavigate();
+    const { teacherId } = useParams()
+
+    useEffect(() => {
+        if (teacherId) {
+            setIsEditMode(true)
+            const fetchTeacher = async () => {
+                try {
+                    const res = await axios.get(`http://localhost:3000/api/teachers/teacher/${teacherId}`)
+                    const teacher = res.data
+                    setName(teacher.fullname)
+                    setUsername(teacher.username)
+                    setPassword("")
+                    setContact(teacher.contact);
+                    setSalary(teacher.salary)
+                } catch (error) {
+                    setError("Error fetching teacher data", error)
+                    toast.error("Error fetching teacher data")
+                }
+            }
+
+            fetchTeacher()
+        }
+    }, [teacherId])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,11 +55,18 @@ const AddTeacher = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:3000/api/teachers/add-teachers", newTeacher);
-
-            // Handle success
-            setSuccess(true);
-            console.log("Teacher Added:", response.data);
+            if (isEditMode) {
+                await axios.patch('http://localhost:3000/api/teachers/teachers-update', {
+                    teacherId,
+                    updateData: newTeacher
+                })
+                setSuccess(true)
+                toast.success("Updated Successfully")
+            } else {
+                await axios.post("http://localhost:3000/api/teachers/add-teachers", newTeacher);
+                setSuccess(true)
+                toast.success("Added Successfully")
+            }
 
             // Clear the form after submission
             setName("");
@@ -53,10 +86,10 @@ const AddTeacher = () => {
 
     return (
         <div className="max-w-md mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Add New Teacher</h2>
+            <h2 className="text-2xl font-bold mb-4">{isEditMode ? "Edit Teacher" : "Add New Teacher"}</h2>
 
             {/* Display success message */}
-            {success && <div className="mb-4 text-green-500">Teacher added successfully!</div>}
+            {success && <div className="mb-4 text-green-500">{isEditMode ? "Teacher Updated Successfully" : "Teacher added successfully"}</div>}
 
             {/* Display error message */}
             {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -138,7 +171,7 @@ const AddTeacher = () => {
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                 >
-                    Add Teacher
+                    {isEditMode ? "Update Teacher" : "Add Teacher"}
                 </button>
             </form>
         </div>

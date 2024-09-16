@@ -8,20 +8,27 @@ import AdminDashboard from "./pages/AdminDashboard"
 import AddTeacher from "./components/AddTeacher"
 import AddStudenst from "./components/AddStudents"
 import AddClass from "./components/AddClasses"
+import { ToastContainer } from "react-toastify"
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/admin-sign-up" element={<AdminPage />} />
-      <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
-      <Route path="/add-teacher" element={<AddTeacher />} />
-      <Route path="/add-students" element={<AddStudenst />} />
-      <Route path="/add-classes" element={<AddClass />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/admin-sign-up" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/add-teacher" element={<AddTeacher />} />
+        <Route path="/add-students" element={<AddStudenst />} />
+        <Route path="/add-classes" element={<AddClass />} />
+        <Route path="/edit-teacher/:teacherId" element={<AddTeacher />} />
+      </Routes>
+      <ToastContainer />
+    </div>
+
+
   )
 }
 

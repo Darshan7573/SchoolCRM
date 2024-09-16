@@ -51,7 +51,7 @@ const ManageTeachers = () => {
                                 {/* <td className="py-3 px-4">{teacher.classAssigned}</td> */}
                                 <td className="py-3 px-4">{teacher.salary}</td>
                                 <td className="py-3 px-4">
-                                    <button className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</button>
+                                    <Link to={`/edit-teacher/${teacher._id}`} className="bg-green-500 text-white py-1 px-2 rounded mr-2">Edit</Link>
                                     <button className="bg-red-500 text-white py-1 px-2 rounded">Delete</button>
                                 </td>
                             </tr>

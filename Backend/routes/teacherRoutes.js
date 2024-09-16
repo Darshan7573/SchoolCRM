@@ -54,10 +54,23 @@ router.get('/teachers', async (req, res) => {
     }
 })
 
-router.post('/teachers-update', async (req, res) => {
+router.get('/teacher/:teacherId', async (req, res) => {
+    const { teacherId } = req.params
+
+    try {
+        const teacher = await Teacher.findById(teacherId)
+        if (!teacher) {
+            return res.status(404).json({ message: "Teacher not found" })
+        }
+        res.status(200).json(teacher)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+router.patch('/teachers-update', async (req, res) => {
 
     const { teacherId, updateData } = req.body
-    console.log(req.body)
 
     try {
         const updateTeachers = await Teacher.findByIdAndUpdate(
@@ -73,6 +86,24 @@ router.post('/teachers-update', async (req, res) => {
         res.status(200).json({
             message: "Teacher updated successfully",
             updateTeachers
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+router.delete('/delete-teacher/:teacherId', async (req, res) => {
+    const { teacherId } = req.params;
+    try {
+        const deleteTeacher = await Teacher.findByIdAndDelete(teacherId)
+
+        if (!deleteTeacher) {
+            return res.status(404).json({ message: "Teacher not found" })
+        }
+
+        res.status(200).json({
+            message: "Teacher Deleted Successfully",
+            deleteTeacher
         })
     } catch (error) {
         res.status(500).json({ error: error.message })
