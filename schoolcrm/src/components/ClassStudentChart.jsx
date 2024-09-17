@@ -10,7 +10,8 @@ import {
     LinearScale,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    scales,
 } from 'chart.js';
 
 // Register required components
@@ -28,6 +29,7 @@ const ClassStudentChart = () => {
     const [classData, setClassData] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [students, setStudents] = useState([]);
+    const [genderDistribution, setGenderDistribution] = useState({ male: 0, female: 0 })
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -35,7 +37,7 @@ const ClassStudentChart = () => {
                 const res = await axios.get('http://localhost:3000/api/teachers/teachers');
                 setTeachers(res.data);
             } catch (error) {
-                toast.error('Error fetching teachers');
+                toast.error('Error fetching teachers', error);
             }
         };
 
@@ -44,16 +46,23 @@ const ClassStudentChart = () => {
                 const res = await axios.get('http://localhost:3000/api/classes/classes');
                 setClassData(res.data);
             } catch (error) {
-                toast.error('Error fetching classes');
+                toast.error('Error fetching classes', error);
             }
         };
 
         const fetchStudents = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/api/students/students');
-                setStudents(res.data);
+                const studentData = res.data
+                console.log(studentData)
+                setStudents(studentData);
+
+                const maleCount = studentData.filter(student => student.gender === "Male").length
+                const femaleCount = studentData.filter(student => student.gender === "Female").length
+
+                setGenderDistribution({ male: maleCount, female: femaleCount })
             } catch (error) {
-                toast.error('Error fetching students');
+                toast.error('Error fetching students', error);
             }
         };
 
@@ -111,6 +120,17 @@ const ClassStudentChart = () => {
         ]
     };
 
+    const genderChartData = {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            label: 'Gender Distribution',
+            data: [genderDistribution.male, genderDistribution.female],
+            backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)'],
+            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+            borderWidth: 1
+        }]
+    }
+
     // Options for the Bar chart
     const classChartOptions = {
         responsive: true,
@@ -128,6 +148,24 @@ const ClassStudentChart = () => {
                 beginAtZero: true,
             },
         },
+    };
+
+    const genderChartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Gender Distribution of Students',
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
     };
 
     // Options for the Pie chart
@@ -196,6 +234,13 @@ const ClassStudentChart = () => {
                 <h2 className='text-2xl font-bold mb-4'>Year-Wise Student Count</h2>
                 <div className='chart-container' style={{ maxWidth: '600px', margin: '0 auto' }}>
                     <Bar data={yearChartData} options={yearChartOptions} />
+                </div>
+            </div>
+
+            <div className='mb-8'>
+                <h2 className='text-2xl font-bold mb-4'>Gender Distribution of Students</h2>
+                <div className='chart-container' style={{ maxWidth: '600px', margin: '0 auto' }}>
+                    <Bar data={genderChartData} options={genderChartOptions} />
                 </div>
             </div>
         </div>
