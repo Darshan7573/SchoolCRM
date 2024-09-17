@@ -69,7 +69,7 @@ router.get('/teacher/:teacherId', async (req, res) => {
     }
 })
 
-router.patch('/teachers-update', async (req, res) => {
+router.patch('/teacher-update', async (req, res) => {
 
     const { teacherId, updateData } = req.body
 

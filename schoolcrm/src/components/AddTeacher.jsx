@@ -22,6 +22,7 @@ const AddTeacher = () => {
 
     useEffect(() => {
         if (teacherId) {
+            console.log('Fetching teacher data for ID:', teacherId)
             setIsEditMode(true)
             const fetchTeacher = async () => {
                 try {
@@ -39,6 +40,8 @@ const AddTeacher = () => {
             }
 
             fetchTeacher()
+        } else {
+            setIsEditMode(false)
         }
     }, [teacherId])
 
@@ -58,7 +61,7 @@ const AddTeacher = () => {
 
         try {
             if (isEditMode) {
-                await axios.patch(`${apiUrl}/api/teachers/teachers-update`, {
+                await axios.patch(`${apiUrl}/api/teachers/teacher-update`, {
                     teacherId,
                     updateData: newTeacher
                 })
@@ -120,7 +123,7 @@ const AddTeacher = () => {
                         required
                     />
                 </div>
-                {isEditMode ? "" : <div className="mb-4">
+                <div className="mb-4">
                     <label className="block text-gray-700">Password</label>
                     <input
                         type="password"
@@ -130,8 +133,7 @@ const AddTeacher = () => {
                         placeholder="Password"
                         required
                     />
-                </div>}
-
+                </div>
 
                 <div className="mb-4">
                     <label className="block text-gray-700">Contact Info</label>
