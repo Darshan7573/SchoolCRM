@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 
 const ManageClasses = () => {
     const [classes, setClasses] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const [noData, setNoData] = useState(false)
 
     const apiUrl = import.meta.env.VITE_API_URL
 
@@ -23,21 +25,25 @@ const ManageClasses = () => {
 
 
     const fetchClasses = async () => {
+        setLoading(true)
         try {
             const res = await axios.get(`${apiUrl}/api/classes/classes`);
-            console.log('API Response:', res.data); // Check the response
             if (Array.isArray(res.data)) {
                 setClasses(res.data);
+                setNoData(res.data.length === 0)
             } else {
                 console.error('Unexpected response format:', res.data);
             }
         } catch (error) {
             console.error('Error fetching Classes:', error);
+        } finally {
+            setLoading(false)
         }
     };
 
     useEffect(() => {
         fetchClasses();
+
     }, []);
 
     return (
@@ -57,6 +63,8 @@ const ManageClasses = () => {
                         <th className="py-3 px-4 text-left">Actions</th>
                     </tr>
                 </thead>
+                {loading ? <div>Loading...</div> : ""}
+                {noData ? <div>No Classes as of now.</div> : ""}
                 <tbody>
                     {classes.map((classItem) => (
                         <tr key={classItem._id} className="border-b">

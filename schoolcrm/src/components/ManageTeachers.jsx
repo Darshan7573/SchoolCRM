@@ -8,6 +8,8 @@ const ManageTeachers = () => {
 
     const [teachers, setTeachers] = useState([])
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(true)
+    const [noData, setNoData] = useState(false)
 
     // const teachers = [
     //     { id: 1, name: "John Doe", contact: "john@example.com", class: "10th Grade", salary: "$5000" },
@@ -17,13 +19,17 @@ const ManageTeachers = () => {
     const apiUrl = import.meta.env.VITE_API_URL
 
     useEffect(() => {
+        setLoading(true)
         const fetchTeachers = async () => {
             try {
                 const res = await axios.get(`${apiUrl}/api/teachers/teachers`)
                 // console.log(res.data)
                 setTeachers(res.data)
+                setNoData(res.data.length === 0)
             } catch (error) {
                 console.log('Error fetching teachers:', error)
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -60,6 +66,8 @@ const ManageTeachers = () => {
                             <th className="py-3 px-4 text-left">Actions</th>
                         </tr>
                     </thead>
+                    {loading ? <div>Loading...</div> : ""}
+                    {noData ? <div>No Teachers as of now.</div> : ""}
                     <tbody>
                         {teachers.map((teacher) => (
                             <tr key={teacher.id} className="border-b">

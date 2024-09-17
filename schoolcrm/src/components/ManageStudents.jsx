@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const ManageStudents = () => {
 
     const [students, setStudents] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [noData, setNoData] = useState(false)
     // const [error, setError] = useState("")
 
     // const students = [
@@ -17,12 +19,16 @@ const ManageStudents = () => {
     const apiUrl = import.meta.env.VITE_API_URL
 
     useEffect(() => {
+        setLoading(true)
         const fetchStudents = async () => {
             try {
                 const res = await axios.get(`${apiUrl}/api/students/students`)
                 setStudents(res.data)
+                setNoData(res.data.length === 0)
             } catch (error) {
                 console.log('Error fetching Students:', error)
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -61,6 +67,8 @@ const ManageStudents = () => {
                         <th className="py-3 px-4 text-left">Actions</th>
                     </tr>
                 </thead>
+                {loading ? <div>Loading...</div> : ""}
+                {noData ? <div>No Classes as of now.</div> : ""}
                 <tbody>
                     {students.map((student) => (
                         <tr key={student.id} className="border-b">
