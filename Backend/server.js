@@ -5,8 +5,13 @@ import adminRoutes from './routes/adminRoutes.js'
 import teacherRoutes from './routes/teacherRoutes.js'
 import studentRoutes from './routes/studentRouter.js'
 import classRoutes from './routes/classRouters.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
+
+const mongooseUrl = process.env.MONGOOSE_URL;
 
 
 app.use(express.json())
@@ -17,7 +22,7 @@ app.use('/api/teachers', teacherRoutes)
 app.use('/api/students', studentRoutes)
 app.use('/api/classes', classRoutes)
 
-mongoose.connect('mongodb+srv://darshu7375:grRl4soFvMiMknwI@cluster0.nay0y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(mongooseUrl)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.error('MongoDB connection error:', err))
 

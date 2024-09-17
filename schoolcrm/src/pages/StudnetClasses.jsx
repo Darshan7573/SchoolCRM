@@ -13,6 +13,8 @@ const StudentClasses = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         console.log('Student Id', studentId)
         if (studentId) {
@@ -24,7 +26,7 @@ const StudentClasses = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`http://localhost:3000/api/classes/student/classes/${studentId}`);
+            const response = await axios.get(`${apiUrl}/api/classes/student/classes/${studentId}`);
 
             setClasses(response.data);
         } catch (error) {

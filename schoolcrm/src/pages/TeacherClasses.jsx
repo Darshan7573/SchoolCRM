@@ -14,10 +14,12 @@ const TeacherClasses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/classes/teacher/classes/${teacherId}`); //66e8742f4934a5f146edefd0 Replace with actual teacher ID or dynamic value
+                const response = await axios.get(`${apiUrl}/api/classes/teacher/classes/${teacherId}`); //66e8742f4934a5f146edefd0 Replace with actual teacher ID or dynamic value
                 setClasses(response.data);
             } catch (err) {
                 setError(err.message);

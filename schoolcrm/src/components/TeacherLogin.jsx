@@ -11,11 +11,14 @@ const TeacherLogin = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
 
+
+    const apiUrl = import.meta.env.VITE_API_URL
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
         try {
-            const res = await axios.post('http://localhost:3000/api/teachers/login', formData)
+            const res = await axios.post(`${apiUrl}/api/teachers/login`, formData)
             console.log(res.data, "response")
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token)

@@ -19,12 +19,14 @@ const AddStudent = () => {
     const navigate = useNavigate();
     const { studentId } = useParams()
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         if (studentId) {
             setIsEditMode(true)
             const fetchStudent = async () => {
                 try {
-                    const res = await axios.get(`http://localhost:3000/api/students/student/${studentId}`)
+                    const res = await axios.get(`${apiUrl}/api/students/student/${studentId}`)
                     const student = res.data
                     setFullname(student.fullname)
                     setUsername(student.username)
@@ -63,14 +65,14 @@ const AddStudent = () => {
 
         try {
             if (isEditMode) {
-                await axios.patch('http://localhost:3000/api/students/student-update', {
+                await axios.patch(`${apiUrl}/api/students/student-update`, {
                     studentId,
                     updatedData: newStudent
                 })
                 setSuccess(true)
                 toast.success("Student Updated Successfully")
             } else {
-                await axios.post("http://localhost:3000/api/students/add-student", newStudent);
+                await axios.post(`${apiUrl}/api/students/add-student`, newStudent);
                 setSuccess(true)
                 toast.success('Added Successfully')
             }

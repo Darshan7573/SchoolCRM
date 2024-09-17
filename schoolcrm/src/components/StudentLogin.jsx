@@ -11,11 +11,14 @@ const StudentLogin = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
 
+
+    const apiUrl = import.meta.env.VITE_API_URL
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
         try {
-            const res = await axios.post('http://localhost:3000/api/students/login', formData);
+            const res = await axios.post(`${apiUrl}/api/students/login`, formData);
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token)
                 toast.success('Login Successful')

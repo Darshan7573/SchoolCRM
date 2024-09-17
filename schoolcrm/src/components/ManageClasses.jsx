@@ -6,11 +6,12 @@ import { toast } from 'react-toastify';
 const ManageClasses = () => {
     const [classes, setClasses] = useState([]);
 
+    const apiUrl = import.meta.env.VITE_API_URL
 
     const handleDelete = async (classId) => {
         if (window.confirm("Are you sure you want to delete this class?")) {
             try {
-                await axios.delete(`http://localhost:3000/api/classes/classes/${classId}`);
+                await axios.delete(`${apiUrl}/api/classes/classes/${classId}`);
                 setClasses(classes.filter(classItem => classItem._id !== classId));
                 fetchClasses()
                 toast.success("Class deleted successfully");
@@ -23,7 +24,7 @@ const ManageClasses = () => {
 
     const fetchClasses = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/classes/classes');
+            const res = await axios.get(`${apiUrl}/api/classes/classes`);
             console.log('API Response:', res.data); // Check the response
             if (Array.isArray(res.data)) {
                 setClasses(res.data);

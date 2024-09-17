@@ -14,10 +14,12 @@ const ManageStudents = () => {
     //     { id: 2, name: "Bob Smith", contact: "bob@example.com", class: "9th Grade", fees: "$1800" },
     // ];
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/students/students')
+                const res = await axios.get(`${apiUrl}/api/students/students`)
                 setStudents(res.data)
             } catch (error) {
                 console.log('Error fetching Students:', error)
@@ -30,12 +32,11 @@ const ManageStudents = () => {
     const handleDelete = async (studentId) => {
         if (window.confirm("Are you sure to delete this Student?")) {
             try {
-                await axios.delete(`http://localhost:3000/api/students/delete-student/${studentId}`)
+                await axios.delete(`${apiUrl}/api/students/delete-student/${studentId}`)
                 setStudents(students.filter(student => student._id !== studentId));
                 toast.success("Student deleted successfully");
             } catch (error) {
-                setError(error)
-                toast.error("Error Deleting Student")
+                toast.error("Error Deleting Student", error)
             }
         }
     }

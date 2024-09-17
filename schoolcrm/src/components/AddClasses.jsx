@@ -19,10 +19,12 @@ const AddClass = () => {
     const navigate = useNavigate();
     const { classesId } = useParams()
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/teachers/teachers");
+                const response = await axios.get(`${apiUrl}/api/teachers/teachers`);
                 setTeachers(response.data);
             } catch (error) {
                 console.error("Error fetching teachers:", error);
@@ -31,7 +33,7 @@ const AddClass = () => {
 
         const fetchStudents = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/students/students");
+                const response = await axios.get(`${apiUrl}/api/students/students`);
                 setStudents(response.data);
             } catch (error) {
                 console.error("Error fetching students:", error);
@@ -41,7 +43,7 @@ const AddClass = () => {
         const fetchClassData = async () => {
             if (classesId) {
                 try {
-                    const res = await axios.get(`http://localhost:3000/api/classes/classes/${classesId}`)
+                    const res = await axios.get(`${apiUrl}/api/classes/classes/${classesId}`)
                     // console.log(res.data)
                     const classData = res.data
                     setName(classData.classname)
@@ -111,7 +113,7 @@ const AddClass = () => {
 
         try {
             if (isEditMode) {
-                await axios.patch(`http://localhost:3000/api/classes/classes-update/${classesId}`, {
+                await axios.patch(`${apiUrl}/api/classes/classes-update/${classesId}`, {
                     classesId: classesId,
                     updateData: classData
                 })
@@ -119,7 +121,7 @@ const AddClass = () => {
                 toast.success('Class Updated')
             }
             else {
-                await axios.post("http://localhost:3000/api/classes/add-class", classData);
+                await axios.post(`${apiUrl}/api/classes/add-class`, classData);
                 setSuccess(true);
                 toast.success("Class Added");
 

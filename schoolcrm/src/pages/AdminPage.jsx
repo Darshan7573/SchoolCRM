@@ -12,6 +12,10 @@ const AdminPage = () => {
 
     const navigate = useNavigate()
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
+
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -21,7 +25,7 @@ const AdminPage = () => {
         setError('');
         setSuccessfull('');
         try {
-            const res = await axios.post('http://localhost:3000/api/admin/signup', formData);
+            const res = await axios.post(`${apiUrl}/api/admin/signup`, formData);
             if (res.data.message) {
                 toast.success(res.data.message)
                 setSuccessfull(res.data.message);

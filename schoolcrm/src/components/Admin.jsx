@@ -10,6 +10,9 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+
+    const apiUrl = import.meta.env.VITE_API_URL
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -18,7 +21,7 @@ const AdminLogin = () => {
         e.preventDefault();
         setError('');
         try {
-            const res = await axios.post('http://localhost:3000/api/admin/login', formData);
+            const res = await axios.post(`${apiUrl}/api/admin/login`, formData);
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
                 toast.success('Login successful');

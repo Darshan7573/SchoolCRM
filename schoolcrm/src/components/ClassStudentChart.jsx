@@ -31,10 +31,12 @@ const ClassStudentChart = () => {
     const [students, setStudents] = useState([]);
     const [genderDistribution, setGenderDistribution] = useState({ male: 0, female: 0 })
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/teachers/teachers');
+                const res = await axios.get(`${apiUrl}/api/teachers/teachers`);
                 setTeachers(res.data);
             } catch (error) {
                 toast.error('Error fetching teachers', error);
@@ -43,7 +45,7 @@ const ClassStudentChart = () => {
 
         const fetchClasses = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/classes/classes');
+                const res = await axios.get(`${apiUrl}/api/classes/classes`);
                 setClassData(res.data);
             } catch (error) {
                 toast.error('Error fetching classes', error);
@@ -52,7 +54,7 @@ const ClassStudentChart = () => {
 
         const fetchStudents = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/students/students');
+                const res = await axios.get(`${apiUrl}/api/students/students`);
                 const studentData = res.data
                 console.log(studentData)
                 setStudents(studentData);

@@ -14,10 +14,12 @@ const ManageTeachers = () => {
     //     { id: 2, name: "Jane Smith", contact: "jane@example.com", class: "9th Grade", salary: "$4500" },
     // ];
 
+    const apiUrl = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/teachers/teachers')
+                const res = await axios.get(`${apiUrl}/api/teachers/teachers`)
                 // console.log(res.data)
                 setTeachers(res.data)
             } catch (error) {
@@ -31,7 +33,7 @@ const ManageTeachers = () => {
     const handleDelete = async (teacherId) => {
         if (window.confirm("Are you sure you want to delete this teacher?")) {
             try {
-                await axios.delete(`http://localhost:3000/api/teachers/delete-teacher/${teacherId}`)
+                await axios.delete(`${apiUrl}/api/teachers/delete-teacher/${teacherId}`)
                 setTeachers(teachers.filter(teacher => teacher._id !== teacherId))
                 toast.success("Teacher deleted successfully")
             } catch (error) {
