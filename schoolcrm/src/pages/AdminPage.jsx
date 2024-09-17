@@ -32,7 +32,7 @@ const AdminPage = () => {
             }
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
-                navigate('/admin')
+                navigate('/')
             }
         } catch (err) {
             console.log(err);

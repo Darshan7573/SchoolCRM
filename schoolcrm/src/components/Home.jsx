@@ -4,8 +4,8 @@ import { FaSchool } from "react-icons/fa";
 function Home() {
     return (
         <div className="flex h-screen">
-            <div className="w-1/2 h-full">
-                <img src="./hero image.png" alt="hero" className="mt-10" />
+            <div className="w-1/2 flex flex-col items-center justify-center">
+                <img src="./hero image.png" alt="hero" className="w-full h-auto" />
                 <p className="text-center text-xl font-semibold text-gray-700 mt-4">Welcome to Our School Management System</p>
             </div>
 

@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 const TeacherClasses = () => {
+
+    const navigate = useNavigate()
+
 
     const { teacherId } = useParams()
 
@@ -30,6 +34,13 @@ const TeacherClasses = () => {
 
     return (
         <div className="p-6 max-w-4xl mx-auto">
+
+            <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+                onClick={() => navigate(-1)} // Go back to the previous page
+            >
+                Go Back
+            </button>
             <h1 className="text-3xl font-bold mb-6 text-center">Classes for Teacher</h1>
             {classes.length === 0 ? (
                 <p className="text-center text-gray-500">No classes found for this teacher.</p>
