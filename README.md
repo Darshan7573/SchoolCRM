@@ -1,5 +1,10 @@
 # SchoolCRM
 
+# Important Note
+
+When Signing Up as Admin It Will Ask for passcode to continue for signup process (PASSCODE:0000)
+IT CANNOT BE UPDATED OR DELETED
+
 SchoolCRM is a comprehensive school management system built using the MERN stack (MongoDB, Express.js, React, Node.js). This application is designed to streamline administrative tasks, manage student and teacher records, and provide insightful analytics. It features user roles for admins, teachers, and students.
 
 ## Features
